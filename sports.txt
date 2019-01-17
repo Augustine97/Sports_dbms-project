@@ -1,0 +1,141 @@
+CREATE TABLE `cup` (
+  `cname` varchar(20) NOT NULL,
+  `country` varchar(20) DEFAULT NULL,
+  `lname` varchar(20) DEFAULT NULL,
+  `clubid` int(10) DEFAULT NULL
+)
+
+CREATE TABLE `footballclub` (
+  `clubid` int(10) NOT NULL,
+  `leaguename` varchar(20) DEFAULT NULL,
+  `jerseycolour` varchar(20) DEFAULT NULL
+)
+
+CREATE TABLE `game` (
+  `gameid` varchar(10) NOT NULL,
+  `stadium` varchar(20) DEFAULT NULL,
+  `date2` date DEFAULT NULL,
+  `time1` time DEFAULT NULL,
+  `hometeam` varchar(20) DEFAULT NULL,
+  `awayteam` varchar(20) DEFAULT NULL,
+  `homescore` int(5) DEFAULT NULL,
+  `awayscore` int(5) DEFAULT NULL
+) 
+
+CREATE TABLE `gcup` (
+  `cname` varchar(20) NOT NULL,
+  `gameid` varchar(10) NOT NULL
+)
+
+CREATE TABLE `gleague` (
+  `lname` varchar(20) NOT NULL,
+  `gameid` varchar(10) NOT NULL
+)
+
+CREATE TABLE `league` (
+  `country` varchar(20) DEFAULT NULL,
+  `lname` varchar(20) NOT NULL
+)
+
+CREATE TABLE `player` (
+  `pname` varchar(20) NOT NULL,
+  `salary` int(11) DEFAULT NULL,
+  `location` varchar(20) DEFAULT NULL,
+  `club` varchar(20) DEFAULT NULL,
+  `clubid` int(10) DEFAULT NULL,
+  `Rating` float NOT NULL,
+  `status` varchar(30) NOT NULL
+) 
+
+CREATE TABLE `stadium` (
+  `sname` varchar(20) NOT NULL,
+  `capacity` int(20) DEFAULT NULL,
+  `location` varchar(20) DEFAULT NULL,
+  `clubid` int(10) DEFAULT NULL
+)
+
+
+ALTER TABLE `cup`
+  ADD PRIMARY KEY (`cname`),
+  ADD KEY `lname` (`lname`),
+  ADD KEY `clubid` (`clubid`);
+
+
+
+ALTER TABLE `footballclub`
+  ADD PRIMARY KEY (`clubid`);
+
+
+
+
+ALTER TABLE `game`
+  ADD PRIMARY KEY (`gameid`);
+
+
+
+
+ALTER TABLE `gcup`
+  ADD PRIMARY KEY (`cname`,`gameid`),
+  ADD KEY `gameid` (`gameid`);
+
+
+
+
+ALTER TABLE `gleague`
+  ADD PRIMARY KEY (`lname`,`gameid`),
+  ADD KEY `gameid` (`gameid`);
+
+
+
+
+ALTER TABLE `league`
+  ADD PRIMARY KEY (`lname`);
+
+
+
+
+ALTER TABLE `player`
+  ADD PRIMARY KEY (`pname`),
+  ADD KEY `clubid` (`clubid`);
+
+
+
+
+ALTER TABLE `stadium`
+  ADD PRIMARY KEY (`sname`),
+  ADD KEY `clubid` (`clubid`);
+
+
+
+
+ALTER TABLE `cup`
+  ADD CONSTRAINT `cup_ibfk_1` FOREIGN KEY (`lname`) REFERENCES `league` (`lname`) ON DELETE CASCADE,
+ 
+
+ ADD CONSTRAINT `cup_ibfk_2` FOREIGN KEY (`clubid`) REFERENCES `footballclub` (`clubid`) ON DELETE CASCADE;
+
+
+
+
+ALTER TABLE `gcup`
+  ADD CONSTRAINT `gcup_ibfk_1` FOREIGN KEY (`cname`) REFERENCES `cup` (`cname`) ON DELETE CASCADE,
+ 
+
+ ADD CONSTRAINT `gcup_ibfk_2` FOREIGN KEY (`gameid`) REFERENCES `game` (`gameid`) ON DELETE CASCADE;
+
+
+
+
+ALTER TABLE `gleague`
+  ADD CONSTRAINT `gleague_ibfk_1` FOREIGN KEY (`lname`) REFERENCES `league` (`lname`) ON DELETE CASCADE,
+ 
+
+ ADD CONSTRAINT `gleague_ibfk_2` FOREIGN KEY (`gameid`) REFERENCES `game` (`gameid`) ON DELETE CASCADE;
+
+
+
+ALTER TABLE `player`
+  ADD CONSTRAINT `player_ibfk_1` FOREIGN KEY (`clubid`) REFERENCES `footballclub` (`clubid`) ON DELETE CASCADE;
+
+ALTER TABLE `stadium`
+  ADD CONSTRAINT `stadium_ibfk_1` FOREIGN KEY (`clubid`) REFERENCES `footballclub` (`clubid`) ON DELETE CASCADE;
